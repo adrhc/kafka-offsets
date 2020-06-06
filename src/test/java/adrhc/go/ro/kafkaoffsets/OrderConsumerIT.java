@@ -30,13 +30,9 @@ public class OrderConsumerIT {
 		try (Consumer<String, Order> consumer = consumerFactory.createConsumer()) {
 			consumer.subscribe(List.of(properties.getOrders()));
 			consumer.poll(Duration.ofSeconds(5))
-					.forEach(it -> {
-						Order order = it.value();
-						log.debug("\n{}", order);
-						if (order.getId() % maxPollRecords == maxPollRecords / 2) {
-							throw new RuntimeException("crash at " + order.toString());
-						}
-					});
+					.forEach(it -> log.debug("\n{}", it.value()));
+			log.debug("skipping consumer auto closure");
+			System.exit(0);
 		}
 	}
 }
