@@ -43,7 +43,7 @@ logging:
           listener: info
       apache:
         kafka: info
-    ro:
+    adrhc:
       go:
-        adrhc: debug
+        ro: debug
 
