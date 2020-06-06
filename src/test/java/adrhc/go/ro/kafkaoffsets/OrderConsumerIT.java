@@ -7,6 +7,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.ConsumerFactory;
 
@@ -21,13 +22,21 @@ public class OrderConsumerIT {
 	private TopicsProperties properties;
 	@Autowired
 	private ConsumerFactory<String, Order> consumerFactory;
+	@Value("${spring.kafka.consumer.max-poll-records}")
+	private int maxPollRecords;
 
 	@Test
 	void consume() {
 		try (Consumer<String, Order> consumer = consumerFactory.createConsumer()) {
 			consumer.subscribe(List.of(properties.getOrders()));
 			consumer.poll(Duration.ofSeconds(5))
-					.forEach(it -> log.debug("\n{}", it.value()));
+					.forEach(it -> {
+						Order order = it.value();
+						log.debug("\n{}", order);
+						if (order.getId() % maxPollRecords == maxPollRecords / 2) {
+							throw new RuntimeException("crash at " + order.toString());
+						}
+					});
 		}
 	}
 }
