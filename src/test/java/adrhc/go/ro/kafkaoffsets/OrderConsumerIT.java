@@ -37,7 +37,7 @@ public class OrderConsumerIT {
 						log.debug("\n{}", it.value());
 						assertThat(it.offset()).withFailMessage("offset exceeded").isLessThan(maxPollRecords);
 					});
-			log.debug("skipping consumer auto closure");
+			log.debug("skipping consumer tidy auto closure");
 			ReflectionTestUtils.setField(consumer, "closed", Boolean.TRUE);
 		}
 	}
