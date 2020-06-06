@@ -15,21 +15,13 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       isolation-level: read_committed
       properties:
-        spring:
-          json:
-            use:
-              type:
-                headers: false
+        auto:
+          offset:
+            reset: earliest
     producer:
       client-id: ${spring.application.name}-producer-id
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        spring:
-          json:
-            use:
-              type:
-                headers: false
 topic:
   version: v1
   prefix: ${spring.application.name}
