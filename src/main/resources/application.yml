@@ -30,4 +30,21 @@ spring:
             use:
               type:
                 headers: false
+topic:
+  version: v1
+  prefix: ${spring.application.name}
+  orders: ${topic.prefix}.orders.${topic.version}
+logging:
+  level:
+    org:
+      springframework:
+        kafka:
+          config:
+            StreamsBuilderFactoryBean: debug
+          listener: info
+      apache:
+        kafka: info
+    ro:
+      go:
+        adrhc: debug
 
