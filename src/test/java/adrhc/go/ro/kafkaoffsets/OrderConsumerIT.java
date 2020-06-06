@@ -27,7 +27,7 @@ public class OrderConsumerIT {
 		try (Consumer<String, Order> consumer = consumerFactory.createConsumer()) {
 			consumer.subscribe(List.of(properties.getOrders()));
 			consumer.poll(Duration.ofSeconds(5))
-					.forEach(it -> log.debug("\n{}", it));
+					.forEach(it -> log.debug("\n{}", it.value()));
 		}
 	}
 }

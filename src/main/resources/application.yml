@@ -21,6 +21,10 @@ spring:
         auto:
           offset:
             reset: earliest
+        spring:
+          json:
+            trusted:
+              packages: "*"
     producer:
       client-id: ${spring.application.name}-producer-id
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
