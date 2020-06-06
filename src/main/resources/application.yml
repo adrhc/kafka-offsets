@@ -15,7 +15,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       isolation-level: read_committed
       enable-auto-commit: true
-      auto-commit-interval: 1d
+      auto-commit-interval: 1s
       max-poll-records: 10
       properties:
         auto:
