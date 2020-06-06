@@ -1,0 +1,33 @@
+spring:
+  main:
+    web-application-type: none
+    banner-mode: off
+    log-startup-info: false
+  application:
+    name: kafka-offsets
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      client-id: ${spring.application.name}-consumer-id
+      group-id: ${spring.application.name}-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      isolation-level: read_committed
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: false
+    producer:
+      client-id: ${spring.application.name}-producer-id
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: false
+
