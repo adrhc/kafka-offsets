@@ -25,9 +25,7 @@ public class OrderListenerIT {
 
 	@Test
 	void handle() throws InterruptedException {
-		log.debug("\nbegin");
 		latch.await(3, TimeUnit.SECONDS);
-		Thread.sleep(1000L); // wait for spring-kafka to stop
 		log.debug("\nend");
 	}
 
