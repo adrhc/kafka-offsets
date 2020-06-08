@@ -1,6 +1,5 @@
 package adrhc.go.ro.kafkaoffsets;
 
-import adrhc.go.ro.kafkaoffsets.config.TopicsProperties;
 import adrhc.go.ro.kafkaoffsets.messages.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
@@ -13,8 +12,6 @@ import java.util.stream.Stream;
 @SpringBootTest
 @EnabledIfSystemProperty(named = "integration", matches = "true")
 public class OrderProducerIT {
-	@Autowired
-	private TopicsProperties properties;
 	@Autowired
 	private KafkaTemplate<String, Order> producer;
 
