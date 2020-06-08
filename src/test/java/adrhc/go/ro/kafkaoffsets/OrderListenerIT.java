@@ -4,7 +4,6 @@ import adrhc.go.ro.kafkaoffsets.messages.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @EnabledIfSystemProperty(named = "integration", matches = "true")
@@ -31,8 +32,11 @@ public class OrderListenerIT {
 
 	@TestConfiguration
 	static class Config {
-		@Autowired
-		private KafkaProperties kafkaProperties;
+		private int stopOffset;
+
+		Config(KafkaProperties kafkaProperties) {
+			stopOffset = kafkaProperties.getConsumer().getMaxPollRecords() / 2;
+		}
 
 		/**
 		 * by default:
@@ -43,7 +47,9 @@ public class OrderListenerIT {
 			@KafkaListener(topics = "${topic.orders}")
 			public void consume(@Payload Order order) {
 				log.debug("\n{}", order);
-				if (order.getId() >= kafkaProperties.getConsumer().getMaxPollRecords() / 2) {
+				assertThat(order.getId()).isLessThanOrEqualTo(stopOffset);
+
+				if (order.getId() >= stopOffset) {
 					latch.countDown();
 					System.exit(1);
 				}
