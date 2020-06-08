@@ -1,3 +1,7 @@
+topic:
+  version: v1
+  prefix: ${spring.application.name}
+  orders: ${topic.prefix}.orders.${topic.version}
 spring:
   main:
     web-application-type: none
@@ -29,10 +33,14 @@ spring:
       client-id: ${spring.application.name}-producer-id
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-topic:
-  version: v1
-  prefix: ${spring.application.name}
-  orders: ${topic.prefix}.orders.${topic.version}
+    listener:
+      ack-mode: batch
+      client-id: ${spring.application.name}-listener-id
+      log-container-config: true
+      missing-topics-fatal: true
+      concurrency: 1
+    template:
+      default-topic: ${topic.orders}
 logging:
   level:
     org:

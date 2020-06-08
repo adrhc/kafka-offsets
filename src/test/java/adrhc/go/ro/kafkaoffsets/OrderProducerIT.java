@@ -22,6 +22,6 @@ public class OrderProducerIT {
 	void produce() {
 		Stream
 				.iterate(0, it -> it < 1000, it -> it + 1)
-				.forEach(it -> producer.send(properties.getOrders(), new Order(it)));
+				.forEach(it -> producer.sendDefault(new Order(it)));
 	}
 }
