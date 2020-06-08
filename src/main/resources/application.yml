@@ -48,7 +48,7 @@ logging:
         kafka:
           config:
             StreamsBuilderFactoryBean: debug
-          listener: debug
+          listener: trace
       apache:
         kafka: info
     adrhc:

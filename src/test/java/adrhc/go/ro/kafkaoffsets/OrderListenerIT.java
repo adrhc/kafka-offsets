@@ -14,6 +14,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 @EnabledIfSystemProperty(named = "integration", matches = "true")
@@ -24,8 +25,9 @@ public class OrderListenerIT {
 
 	@Test
 	void handle() throws InterruptedException {
-		latch.await();
-		Thread.sleep(9991000L); // wait for spring-kafka to stop
+		log.debug("\nbegin");
+		latch.await(3, TimeUnit.SECONDS);
+		Thread.sleep(1000L); // wait for spring-kafka to stop
 		log.debug("\nend");
 	}
 
@@ -34,14 +36,18 @@ public class OrderListenerIT {
 		@Autowired
 		private KafkaProperties kafkaProperties;
 
+		/**
+		 * by default:
+		 * KafkaMessageListenerContainer.ListenerConsumer.errorHandler = SeekToCurrentErrorHandler
+		 */
 		@Component
 		public class OrderHandler {
 			@KafkaListener(topics = "${topic.orders}")
 			public void consume(@Payload Order order) {
 				log.debug("\n{}", order);
-				if (order.getId() + 1 == kafkaProperties.getConsumer().getMaxPollRecords()) {
+				if (order.getId() >= kafkaProperties.getConsumer().getMaxPollRecords() / 2) {
 					latch.countDown();
-					throw new RuntimeException("stop at consumer pool's last record");
+					System.exit(1);
 				}
 			}
 		}
